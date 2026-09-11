@@ -304,12 +304,13 @@ def sendMessage(String msgTopic, String msgProps, String msgContent) {
             timeout(1) {
                 try {
                     // Send message and return SendResult
-                    sendResult = sendCIMessage messageContent: msgContent,
-                            messageProperties: msgProps,
-                            messageType: 'Custom',
+                    sendResult = sendCIMessage providerData: [
+                            $class: 'ActiveMQPublisherProviderData',
+                            name: "${MSG_PROVIDER}",
                             overrides: [topic: msgTopic],
-                            failOnError: true,
-                            providerName: "${MSG_PROVIDER}"
+                            messageContent: msgContent,
+                            messageProperties: msgProps,
+                            failOnError: true]
                     return sendResult
                 } catch(e) {
                     throw e
